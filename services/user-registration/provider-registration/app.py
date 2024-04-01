@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request,redirect, url_for
 from provider import db, Services, Users, Customers
 from flask_bcrypt import Bcrypt 
 import os
+from flask_cors import CORS
 
 
 
@@ -14,6 +15,7 @@ import os
 # #Configuring our sample database on ElephantSQL for now, until AWS is set up
 
 app = Flask(__name__)
+cors = CORS(app)
 
 #Configuring our sample database on ElephantSQL for now, until AWS is set up
 
@@ -53,7 +55,12 @@ with app.app_context():
 #    db.session.commit()
 #    return jsonify({'message': 'User created successfully'}), 201
 
-
+@app.route("/api/home", methods=['GET'])
+def member():
+    return jsonify({
+        "message": "Hello Lamin Jawneh!"
+                    
+    })
 # Route for adding a new provider
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -160,7 +167,7 @@ def get_registered_providers():
 
 
 # route for adding a new Customer
-@app.route("/customer/customer_registration")
+@app.route("/customer/customer_registration", methods=['POST'])
 def customer_registration():
     data = request.json
 
@@ -255,5 +262,6 @@ def get_all_services():
 
 
 if __name__ == "__main__":
-   app.run(debug=True)
+   app.run(debug=True, port=8080)
 
+    

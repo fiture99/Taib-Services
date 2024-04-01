@@ -16,6 +16,16 @@ class Users(db.Model):
     profile = db.Column(db.JSON)
     settings = db.Column(db.JSON)
 
+class Customers(db.Model):
+    _id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    _type = db.Column(db.String(20), nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+    profile = db.Column(db.JSON)
+    settings = db.Column(db.JSON)
+
 class Services(db.Model):
     _id = db.Column(db.Integer, primary_key=True)
     service_name = db.Column(db.String(100), nullable=False)
