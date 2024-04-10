@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request,redirect, url_for
-from provider import db, Services, Users, Customers
+from data import db, Services, Users, Customers
 from flask_bcrypt import Bcrypt 
 import os
 from flask_cors import CORS
@@ -16,7 +16,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 cors = CORS(app)
-
+# migrate = Migrate(app, db)
 #Configuring our sample database on ElephantSQL for now, until AWS is set up
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://wkqmjhrt:FLZo15GpZ1jvzZ85Qkfm_TPIEv2G5s3e@rain.db.elephantsql.com/wkqmjhrt"
@@ -30,30 +30,6 @@ bcrypt = Bcrypt(app)
 # Create the tables before running the application
 with app.app_context():
     db.create_all()
-
-# @app.route("/provider/register",methods=["POST"])
-# # def create_provider():
-
-#     #Extract JSON Data from the http request
-    
-#     #Process the JSON Data, Validation or any other operations including the file upload
-
-
-#     #Return a JSON response which looks like this, we might have additional things later on.
-
-#    new_user = Users(
-#       first_name= "John Doe",
-#       last_name= "John Doe", 
-#       email= "johndoe@example.com",
-#       _type= "customer",
-#       password= "hashed_password",
-#       profile= {},
-#       settings= {} 
-#       )
-      
-#    db.session.add(new_user)
-#    db.session.commit()
-#    return jsonify({'message': 'User created successfully'}), 201
 
 @app.route("/api/home", methods=['GET'])
 def member():
@@ -73,11 +49,11 @@ def login():
     #  Check if user exists in database
     user = Users.query.filter_by(email=email).first()
     if not user:
-        return jsonify({'error': 'User not found'}), 404
+        return jsonify({'error': 'Invalid Username or Password'}), 404
 
     # Check if the password is correct
     if not bcrypt.check_password_hash(user.password, password):
-        return jsonify({'error': 'Invalid password'}), 401
+        return jsonify({'error': 'Invalid Username or Password'}), 401
     
 
      # Determine the user's role
@@ -94,11 +70,23 @@ def login():
     else:
          return jsonify({'error': 'Unknown user type'}), 500
 
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    data = request.json
+
+    # Extract user data from the request
+    # email = data.get('email')
+    # password = data.get('password')
+    # # role = data.get('role')
+
+    # # Validate the received data
+    # if not email or not password:
+    return jsonify({'error': 'Email and password are required'})
 
 
 @app.route("/provider_page")
 def provider_page():
-    return("Welcomw to the Providers Page")
+   return jsonify({'provider': 'Welcome to the provider Page'}), 201
 
 
 
@@ -116,6 +104,7 @@ def register_provider():
     password = data.get('password')
     first_name = data.get('first_name')
     last_name = data.get('last_name')
+    # address = data.get('address')
 
 
     # Hash the password
@@ -136,6 +125,7 @@ def register_provider():
         _type="provider",
         first_name=first_name,
         last_name=last_name,
+        # address=address
     )
 
     # Add the new provider to the database
@@ -158,6 +148,7 @@ def get_registered_providers():
             "first_name": provider.first_name,
             "last_name": provider.last_name,
             "email": provider.email,
+            # "address": address,
             # Add other attributes if needed
         }
         provider_data.append(provider_info)
@@ -175,6 +166,7 @@ def customer_registration():
     password = data.get('password')
     first_name = data.get('first_name')
     last_name = data.get('last_name')
+    # address = data.get('address')
 
 
       # Hash the password
@@ -195,6 +187,7 @@ def customer_registration():
         _type="customer",
         first_name=first_name,
         last_name=last_name,
+        # address = address,
     )
 
     # Add the new provider to the database
@@ -205,7 +198,7 @@ def customer_registration():
 
 
 # Route for adding a new service
-@app.route("/services", methods=["POST"])
+@app.route("/add_services", methods=["POST"])
 def add_service():
     # Extract JSON data from the HTTP request
     data = request.json

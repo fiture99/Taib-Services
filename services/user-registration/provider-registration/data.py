@@ -14,6 +14,7 @@ class Users(db.Model):
     _type = db.Column(db.String(20), nullable=False)
     password = db.Column(db.String(100), nullable=False)
     profile = db.Column(db.JSON)
+    # address = db.Column(db.String(100), nullable=False)
     settings = db.Column(db.JSON)
 
 class Customers(db.Model):
@@ -24,6 +25,7 @@ class Customers(db.Model):
     _type = db.Column(db.String(20), nullable=False)
     password = db.Column(db.String(100), nullable=False)
     profile = db.Column(db.JSON)
+    # address = db.Column(db.String(100), nullable=False)
     settings = db.Column(db.JSON)
 
 class Services(db.Model):

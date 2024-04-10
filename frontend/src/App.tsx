@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import Login from './components/Login'; // Assuming Login component is in a file named Login.tsx
-import NavBar from './components/NavBar';
-import ProviderPage from './components/ProviderPage';
+import Login from './pages/Login'; // Assuming Login component is in a file named Login.tsx
+import ProviderPage from './pages/ProviderPage';
+import Nav from './Nav';
+import { BrowserRouter as Router } from "react-router-dom";
 
 
 // function App() {
@@ -39,9 +40,9 @@ import ProviderPage from './components/ProviderPage';
 
 function App() {
   return (
-    <div>
-      <ProviderPage/>
-    </div>
+    <Router>
+      <Nav/>
+    </Router>
   );
 }
 
