@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBInput, MDBBtn } from 'mdb-react-ui-kit';
-import {Link, useNavigate } from 'react-router-dom'; 
+import {Link, useNavigate, useLocation } from 'react-router-dom'; 
 import SignUp from './SignUp';
 
 
@@ -9,6 +9,16 @@ export function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const [message, setMessage] = useState('');
+  const location = useLocation();
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const messageParam = searchParams.get('message');
+    if (messageParam) {
+      setMessage(messageParam);
+    }
+  }, [location.search]);
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -33,13 +43,18 @@ export function Login() {
       if (!response.ok) {
         throw new Error(data.error);
       }
-      console.log(data);
       // Redirect based on user type
-      if (data.type === 'provider') {
+      if (data.user_type === 'provider') {
+        console.log("Redirecting to provider page...");
         navigate('/providerPage');
-      } else if (data.type === 'customer') {
+      } else if (data.user_type === 'customer') {
+        console.log("Redirecting to customer page...");
         navigate('/customerPage');
+      } else {
+        console.error('Unknown user type:', data);
       }
+      
+    
     } catch (error: any) {
       console.error('Error logging in:', error.message);
       setError(error.message);
@@ -57,6 +72,7 @@ export function Login() {
             <MDBCardBody>
               <h2 className='text-center mb-4'>Login</h2>
               {error && <p className='text-danger mt-3'>{error}</p>}
+              {message && <p className='text-success mt-3'>{message}</p>}
               <form onSubmit={handleSubmit}>
                 <MDBInput label='Email address' type='email' value={email} onChange={handleEmailChange} required  />
                 <div className='d-grid gap-2 mb-4'/>            
