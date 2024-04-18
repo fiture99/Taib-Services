@@ -83,10 +83,13 @@ def signup():
     # if not email or not password:
     return jsonify({'error': 'Email and password are required'})
 
-
 @app.route("/provider_page")
 def provider_page():
-   return jsonify({'provider': 'Welcome to the provider Page'}), 201
+#    return jsonify({'provider': 'Welcome to the provider Page'}), 201
+    # Assume you have a variable `user_type` that holds the user type
+    user_type = 'provider'
+    return jsonify({'user_type': user_type, 'message': 'Welcome to the provider Page '}), 200
+
 
 
 
@@ -102,15 +105,16 @@ def register_provider():
     # Extract required fields from the JSON data
     email = data.get('email')
     password = data.get('password')
-    first_name = data.get('first_name')
-    last_name = data.get('last_name')
-    # address = data.get('address')
+    first_name = data.get('firstName')
+    last_name = data.get('lastName')
+    address = data.get('address')
+    gender = data.get('gender')
 
 
     # Hash the password
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         # Validation
-    if not email or not password or not first_name or not last_name:
+    if not email or not password or not first_name or not last_name or not address or not gender:
         return jsonify({'error': 'Missing required fields'}), 400
 
     # Check if the email is already registered
@@ -125,14 +129,15 @@ def register_provider():
         _type="provider",
         first_name=first_name,
         last_name=last_name,
-        # address=address
+        address=address,
+        gender=gender,
     )
 
     # Add the new provider to the database
     db.session.add(new_provider)
     db.session.commit()
-
-    return jsonify({'message': 'Provider registered successfully'}), 201
+    full_name = "{} {}".format(first_name, last_name)
+    return jsonify({'message': 'Provider {} registered successfully'.format(full_name)}), 201
 
 # Route for getting all providers
 @app.route("/provider/service_providers", methods=["GET"])
@@ -159,24 +164,26 @@ def get_registered_providers():
 
 # route for adding a new Customer
 @app.route("/customer/customer_registration", methods=['POST'])
-def customer_registration():
+def register_customer():
     data = request.json
 
+    # Extract required fields from the JSON data
     email = data.get('email')
     password = data.get('password')
-    first_name = data.get('first_name')
-    last_name = data.get('last_name')
-    # address = data.get('address')
+    first_name = data.get('firstName')
+    last_name = data.get('lastName')
+    address = data.get('address')
+    gender = data.get('gender')
 
 
-      # Hash the password
+    # Hash the password
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         # Validation
-    if not email or not password or not first_name or not last_name:
+    if not email or not password or not first_name or not last_name or not address or not gender:
         return jsonify({'error': 'Missing required fields'}), 400
 
     # Check if the email is already registered
-    existing_user = Users.query.filter_by(email=email).first()
+    existing_user = Customers.query.filter_by(email=email).first()
     if existing_user:
         return jsonify({'error': 'Email is already registered'}), 409
 
@@ -187,14 +194,15 @@ def customer_registration():
         _type="customer",
         first_name=first_name,
         last_name=last_name,
-        # address = address,
+        address=address,
+        gender=gender,
     )
 
     # Add the new provider to the database
     db.session.add(new_customer)
     db.session.commit()
-
-    return jsonify({'message': 'Provider registered successfully'}), 201
+    full_name = "{} {}".format(first_name, last_name)
+    return jsonify({'message': 'Customer {} registered successfully'.format(full_name)}), 201
 
 
 # Route for adding a new service
