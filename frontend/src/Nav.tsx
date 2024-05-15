@@ -7,14 +7,17 @@ import {Login} from './pages/Login';
 import SignUp from './pages/SignUp';
 import ProviderRegistration from './pages/ProviderRegistration';
 import CustomerRegistration from './pages/CustomerRegistration';
+import CustomerPage from './pages/CustomerPage';
 export function Nav() {
   return (
       <Routes>
         <Route path="/providerPage" element={<ProviderPage/>} />
+        <Route path="/customerPage" element={<CustomerPage/>} />
         <Route path="/login" element={<Login/>} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/providerRegistration" element={<ProviderRegistration />} />
         <Route path="/customerRegistration" element={<CustomerRegistration />} />
+        
       </Routes>
   )
 }

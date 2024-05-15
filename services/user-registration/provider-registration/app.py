@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request,redirect, url_for
-from data import db, Services, Users, Customers
+from data import db, Services, Providers, Customers
 from flask_bcrypt import Bcrypt 
 import os
 from flask_cors import CORS
@@ -47,7 +47,7 @@ def login():
     password = data.get( "password" )
 
     #  Check if user exists in database
-    user = Users.query.filter_by(email=email).first()
+    user = Providers.query.filter_by(email=email).first() or Customers.query.filter_by(email=email).first()
     if not user:
         return jsonify({'error': 'Invalid Username or Password'}), 404
 
@@ -95,7 +95,8 @@ def provider_page():
 
 @app.route("/customer_page")
 def customer_page():
-    return("Welcome to Customer Page")
+    user_type = 'customer'
+    return jsonify({'user_type': user_type, 'message': 'Welcome to the Customer Page '}), 200
 
 
 @app.route("/provider/provider_register", methods=["POST"])
@@ -108,6 +109,8 @@ def register_provider():
     first_name = data.get('firstName')
     last_name = data.get('lastName')
     address = data.get('address')
+    profession = data.get('profession')
+    contact_no = data.get('contact')
     gender = data.get('gender')
 
 
@@ -118,18 +121,20 @@ def register_provider():
         return jsonify({'error': 'Missing required fields'}), 400
 
     # Check if the email is already registered
-    existing_user = Users.query.filter_by(email=email).first()
+    existing_user = Providers.query.filter_by(email=email).first() or Customers.query.filter_by(email=email).first()
     if existing_user:
         return jsonify({'error': 'Email is already registered'}), 409
 
     # Create a new provider
-    new_provider = Users(
+    new_provider = Providers(
         email=email,
         password=hashed_password,
         _type="provider",
         first_name=first_name,
         last_name=last_name,
         address=address,
+        profession=profession,
+        contact_no=contact_no,
         gender=gender,
     )
 
@@ -143,7 +148,7 @@ def register_provider():
 @app.route("/provider/service_providers", methods=["GET"])
 def get_registered_providers():
     # Query all registered providers
-    registered_providers = Users.query.filter_by(_type="provider").all()
+    registered_providers = Providers.query.filter_by(_type="provider").all()
 
     # Prepare the response data
     provider_data = []
@@ -153,7 +158,9 @@ def get_registered_providers():
             "first_name": provider.first_name,
             "last_name": provider.last_name,
             "email": provider.email,
-            # "address": address,
+            "address": provider.address,
+            "contact_no": provider.contact_no,
+            "profession": provider.profession,
             # Add other attributes if needed
         }
         provider_data.append(provider_info)
@@ -173,6 +180,8 @@ def register_customer():
     first_name = data.get('firstName')
     last_name = data.get('lastName')
     address = data.get('address')
+    street_no = data.get('street')
+    contact_no = data.get('contact')
     gender = data.get('gender')
 
 
@@ -183,7 +192,7 @@ def register_customer():
         return jsonify({'error': 'Missing required fields'}), 400
 
     # Check if the email is already registered
-    existing_user = Customers.query.filter_by(email=email).first()
+    existing_user = Providers.query.filter_by(email=email).first() or Customers.query.filter_by(email=email).first()
     if existing_user:
         return jsonify({'error': 'Email is already registered'}), 409
 
@@ -195,14 +204,40 @@ def register_customer():
         first_name=first_name,
         last_name=last_name,
         address=address,
+        street_no =street_no,
+        contact_no=contact_no,
         gender=gender,
     )
 
-    # Add the new provider to the database
+    # Add the new Cutomer to the database
     db.session.add(new_customer)
     db.session.commit()
     full_name = "{} {}".format(first_name, last_name)
     return jsonify({'message': 'Customer {} registered successfully'.format(full_name)}), 201
+
+
+
+
+# Route for getting all Customer
+@app.route("/customer/customers", methods=["GET"])
+def get_registered_customers():
+    # Query all registered providers
+    registered_customers = Customers.query.filter_by(_type="customer").all()
+
+    # Prepare the response data
+    customer_data = []
+    for customer in registered_customers:
+        customer_info = {
+            "id": customer._id,
+            "first_name": customer.first_name,
+            "last_name": customer.last_name,
+            "email": customer.email,
+            # "address": address,
+            # Add other attributes if needed
+        }
+        customer_data.append(customer_info)
+
+    return jsonify(customer_data), 200
 
 
 # Route for adding a new service
@@ -222,7 +257,7 @@ def add_service():
         return jsonify({'error': 'Missing required fields'}), 400
 
     # Retrieve the provider object based on the provided ID
-    provider = Users.query.get(provider_id)
+    provider = Providers.query.get(provider_id)
     if not provider:
         return jsonify({'error': 'Provider not found'}), 404
 

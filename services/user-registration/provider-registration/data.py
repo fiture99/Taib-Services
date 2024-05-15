@@ -6,7 +6,7 @@ from sqlalchemy.dialects.postgresql import JSON
 
 db = SQLAlchemy()
 
-class Users(db.Model):
+class Providers(db.Model):
     _id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
@@ -15,6 +15,8 @@ class Users(db.Model):
     password = db.Column(db.String(100), nullable=False)
     profile = db.Column(db.JSON)
     address = db.Column(db.String(100), nullable=False)
+    profession = db.Column(db.String(100), nullable=False)
+    contact_no = db.Column(db.BigInteger) 
     gender = db.Column(db.String(10), nullable=False)
     settings = db.Column(db.JSON)
 
@@ -27,6 +29,8 @@ class Customers(db.Model):
     password = db.Column(db.String(100), nullable=False)
     profile = db.Column(db.JSON)
     address = db.Column(db.String(100), nullable=False)
+    street_no = db.Column(db.String(100), nullable=False)
+    contact_no = db.Column(db.BigInteger) 
     gender = db.Column(db.String(10), nullable=False)
     settings = db.Column(db.JSON)
 
@@ -35,8 +39,8 @@ class Services(db.Model):
     service_name = db.Column(db.String(100), nullable=False)
     category = db.Column(db.String(200), nullable=False)
     description = db.Column("about", db.Text)
-    provider_id = db.Column(db.Integer, db.ForeignKey('users._id'), nullable=False)
-    provider = db.relationship('Users', backref=db.backref('services', lazy=True))
+    provider_id = db.Column(db.Integer, db.ForeignKey('providers._id'), nullable=False)
+    provider = db.relationship('Providers', backref=db.backref('services', lazy=True))
 
 
 

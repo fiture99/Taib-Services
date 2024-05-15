@@ -38,7 +38,7 @@ export function SignUp() {
     <div className='mt-5'>
       <MDBContainer fluid>
         <MDBRow className='d-flex justify-content-center align-items-center h-100'>
-          <MDBCol md='6'>
+          <MDBCol md='4'>
             <MDBCard>
               <MDBCardBody>
                 <h2 className='text-center mb-4'>Sign Up</h2>
