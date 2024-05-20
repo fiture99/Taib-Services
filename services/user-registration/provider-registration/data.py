@@ -41,6 +41,25 @@ class Services(db.Model):
     description = db.Column("about", db.Text)
     provider_id = db.Column(db.Integer, db.ForeignKey('providers._id'), nullable=False)
     provider = db.relationship('Providers', backref=db.backref('services', lazy=True))
+    
+class Requests(db.Model):
+    _id = db.Column(db.Integer, primary_key=True)
+    customer_id = db.Column(db.Integer, db.ForeignKey('customers._id'), nullable=False)
+    provider_id = db.Column(db.Integer, db.ForeignKey('providers._id'), nullable=False)
+
+    request_details = db.Column(db.Text, nullable=False)
+    status = db.Column(db.String(20), default='pending')
+    date = db.Column(db.DateTime, nullable=False)
+
+    customer = db.relationship('Customers', backref=db.backref('requests', lazy=False))
+    provider = db.relationship('Providers', backref=db.backref('requests', lazy=False))
+
+
+
+
+
+
+
 
 
 

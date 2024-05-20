@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import NavBar from './NavBar'
 
 export function ProviderPage() {
   const [provider, setProvider] = useState([]);
@@ -15,6 +16,7 @@ export function ProviderPage() {
 
   return (
     <div>
+      <NavBar/>
       <h1>Welcome to the Provider Page</h1>
       <p>{provider}</p>
     </div>

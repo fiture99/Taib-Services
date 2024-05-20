@@ -1,8 +1,9 @@
 from flask import Flask, jsonify, request,redirect, url_for
-from data import db, Services, Providers, Customers
+from data import db, Services, Providers, Customers, Requests
 from flask_bcrypt import Bcrypt 
 import os
 from flask_cors import CORS
+from datetime import datetime
 
 
 
@@ -294,6 +295,32 @@ def get_all_services():
         service_list.append(service_data)
     return jsonify(service_list), 200
 
+
+
+@app.route("/requests", methods=['POST'])
+def requests():
+    data = request.json
+
+    customer_id = data.get('customer_id')
+    provider_id = data.get('provider_id')
+    request_details = data.get('request_details')
+    status = data.get('status','pending')
+    date = datetime.now()
+
+    if not customer_id or not provider_id or not request_details or not date:
+        return jsonify({'error': 'Invalid request'}), 400
+    
+    new_request = Requests(
+        customer_id=customer_id,
+        provider_id=provider_id,
+        request_details=request_details,
+        status=status,
+        date=date,
+    )
+
+    db.session.add(new_request)
+    db.session.commit()
+    return jsonify({'message': 'Request added successfully'}), 201
 
 
 
