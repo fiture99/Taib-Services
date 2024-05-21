@@ -8,7 +8,9 @@ import SignUp from './pages/SignUp';
 import ProviderRegistration from './pages/ProviderRegistration';
 import CustomerRegistration from './pages/CustomerRegistration';
 import CustomerPage from './pages/CustomerPage';
-import RequestDescription from './ui/RequestDescription'
+import RequestDescription from './ui/RequestDescription';
+import CustomerRequests from './pages/CustomerRequests';
+
 export function Nav() {
   return (
       <Routes>
@@ -18,6 +20,8 @@ export function Nav() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/providerRegistration" element={<ProviderRegistration />} />
         <Route path="/customerRegistration" element={<CustomerRegistration />} />
+        <Route path="/requests" element={<RequestDescription />} />
+        <Route path="/customerPage/CustomerRequests" element={<CustomerRequests />} />
         
       </Routes>
   )

@@ -321,6 +321,32 @@ def requests():
     db.session.add(new_request)
     db.session.commit()
     return jsonify({'message': 'Request added successfully'}), 201
+        
+
+@app.route("/customer/<int:customer_id>/requests", methods=['GET'])
+def get_customer_requests(customer_id):
+    try:
+        requests = Requests.query.filter_by(customer_id=customer_id).all()
+        if not requests:
+            return jsonify({'error': 'No requests found'}), 404
+
+        request_list = [
+            {
+                'id': request._id,
+                'provider_id': request.provider_id,
+                'request_details': request.request_details,
+                'status': request.status,
+                'date': request.date.isoformat() if request.date else None
+            }
+            for request in requests
+        ]
+        return jsonify(request_list), 200
+        
+    except Exception as e:
+        print(f"Error fetching File {e}")
+        return jsonify({'error':'Fail to fetch the request'})
+
+
 
 
 

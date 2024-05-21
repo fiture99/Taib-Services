@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import CustomerRequests from './CustomerRequests';
+
 
 function Header() {
   return (
@@ -15,7 +17,7 @@ function Header() {
               <Link className="nav-link" to="/">Home</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/about">About</Link>
+              <Link className="nav-link" to='./CustomerRequests'>My Requests</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/contact">Contact</Link>

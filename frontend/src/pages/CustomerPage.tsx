@@ -3,6 +3,9 @@ import Swal from 'sweetalert2';
 import NavBar from './NavBar';
 import SideBar from './SideBar';
 import RatingStars from './RatingStars';
+import loadingGif from '../assets/Loading_2.gif'
+import CustomerRequests from './CustomerRequests'
+import customerId from './CustomerRequests'
 
 // Mock authenticated customer ID (replace with actual implementation)
 const getAuthenticatedCustomerId = () => {
@@ -27,23 +30,27 @@ export function CustomerPage() {
   const customerId = getAuthenticatedCustomerId();
 
   useEffect(() => {
-    fetch("http://localhost:8080/provider/service_providers")
-      .then(response => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/provider/service_providers");
         if (!response.ok) {
           throw new Error('Failed to fetch providers');
         }
-        return response.json();
-      })
-      .then(data => {
+        const data = await response.json();
         setProviders(data);
-        setLoading(false);
-      })
-      .catch(error => {
+      } catch (error) {
         console.error('Error fetching providers:', error);
         setError(error.message);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+    const timer = setTimeout(() => {
+      fetchData();
+    }, 5000);
+    return () => clearTimeout(timer);
   }, []);
+
 
   const handleRequest = async (provider: Provider) => {
     console.log('Provider', provider)
@@ -105,9 +112,13 @@ export function CustomerPage() {
           </div>
           <div className="col-lg-10">
             <h1 className="text-center mb-3">Welcome to the Customer Page</h1>
-            {loading && <p>Loading...</p>}
-            {error && <p>Error: {error}</p>}
-            {!loading && !error && (
+            {loading ? (
+              <div className="text-center">
+                <img src={loadingGif} alt="Loading..." />
+              </div>
+            ) : error ? (
+              <p>Error: {error}</p>
+            ) : (
               <div className="row">
                 <h2 className="text-center mb-4">Available Providers</h2>
                 {providers.map(provider => (
