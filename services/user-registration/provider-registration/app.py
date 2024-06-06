@@ -4,12 +4,7 @@ from flask_bcrypt import Bcrypt
 import os
 from flask_cors import CORS
 from datetime import datetime
-
-
-
-
-
-
+import jwt
 
 # app = Flask(__name__)
 
@@ -32,12 +27,41 @@ bcrypt = Bcrypt(app)
 with app.app_context():
     db.create_all()
 
-@app.route("/api/home", methods=['GET'])
-def member():
-    return jsonify({
-        "message": "Hello Lamin Jawneh!"
-                    
-    })
+
+
+
+# SECRET_KEY = 'your_secret_key'  # Make sure to use a secure key
+
+# def get_authenticated_customer_id():
+#     auth_header = request.headers.get('Authorization')
+#     if auth_header:
+#         try:
+#             token = auth_header.split(" ")[1]
+#             payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+#             return payload.get('customer_id')
+#         except jwt.ExpiredSignatureError:
+#             return None
+#         except jwt.InvalidTokenError:
+#             return None
+#     return None
+
+# @app.route("/auth/customer", methods=["GET"])
+# def get_authenticated_customer():
+#     authenticated_customer_id = get_authenticated_customer_id()
+#     if authenticated_customer_id:
+#         customer = Customers.query.filter_by(_id=authenticated_customer_id).first()
+#         if customer:
+#             customer_info = {
+#                 "id": customer._id,
+#                 "first_name": customer.first_name,
+#                 "last_name": customer.last_name,
+#                 "email": customer.email,
+#                 # Add other attributes if needed
+#             }
+#             return jsonify(customer_info), 200
+#     return jsonify({"error": "Customer not found"}), 404
+
+
 # Route for adding a new provider
 
 @app.route("/login", methods=['GET', 'POST'])

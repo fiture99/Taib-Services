@@ -4,7 +4,7 @@ import NavBar from './NavBar';
 import SideBar from './SideBar';
 import RatingStars from './RatingStars';
 import loadingGif from '../assets/Loading_2.gif'
-import CustomerRequests from './CustomerRequests'
+// import CustomerRequests from './CustomerRequests'
 import customerId from './CustomerRequests'
 
 // Mock authenticated customer ID (replace with actual implementation)

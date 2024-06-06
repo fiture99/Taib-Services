@@ -3,10 +3,12 @@ import loadingGif from '../assets/Loading_2.gif'
 interface Request {
   _id: string;
   provider_id: string;
+  customer_id: string;
   request_details: string;
   status: string;
   date: string;
 }
+
 
 const CustomerRequests = ({ customerId }) => {
   const [requests, setRequests] = useState<Request[]>([]);
@@ -55,6 +57,7 @@ const CustomerRequests = ({ customerId }) => {
           {requests.map(request => (
             <li key={request._id}>
               <p>Provider ID: {request.provider_id}</p>
+              <p>Customer ID: {request.customer_id}</p>
               <p>Details: {request.request_details}</p>
               <p>Status: {request.status}</p>
               <p>Date: {request.date}</p>

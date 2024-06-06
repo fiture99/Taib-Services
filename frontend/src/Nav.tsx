@@ -10,6 +10,8 @@ import CustomerRegistration from './pages/CustomerRegistration';
 import CustomerPage from './pages/CustomerPage';
 import RequestDescription from './ui/RequestDescription';
 import CustomerRequests from './pages/CustomerRequests';
+import CustomerApp from './pages/CustomerApp';
+
 
 export function Nav() {
   return (
@@ -22,6 +24,7 @@ export function Nav() {
         <Route path="/customerRegistration" element={<CustomerRegistration />} />
         <Route path="/requests" element={<RequestDescription />} />
         <Route path="/customerPage/CustomerRequests" element={<CustomerRequests />} />
+        <Route path="/customerPage/CustomerDashboard" element={<CustomerApp />} />
         
       </Routes>
   )
