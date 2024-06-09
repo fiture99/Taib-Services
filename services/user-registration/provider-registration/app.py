@@ -70,6 +70,7 @@ def login():
 
     email = data.get("email")
     password = data.get( "password" )
+    customerId = data.get("_id")
 
     #  Check if user exists in database
     user = Providers.query.filter_by(email=email).first() or Customers.query.filter_by(email=email).first()
@@ -357,6 +358,7 @@ def get_customer_requests(customer_id):
         request_list = [
             {
                 'id': request._id,
+                'customer_id':request.customer_id,
                 'provider_id': request.provider_id,
                 'request_details': request.request_details,
                 'status': request.status,

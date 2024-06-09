@@ -60,6 +60,10 @@ interface Provider {
   address: string;
   rating: number;
 }
+
+// interface Customer {
+//   _id: string;
+// }
 const LoadingContainer = styled.div`
 position: fixed;
 top: 50%;
@@ -73,27 +77,27 @@ const getAuthenticatedCustomerId = () => {
 
 const Dashboard: React.FC = () => {
   const [providers, setProviders] = useState<Provider[]>([]);
-  const customerId = getAuthenticatedCustomerId();
-  // const [customerId, setCustomerId] = useState<number | null>(null); // Added state for customer ID
+  // const customerId = getAuthenticatedCustomerId();
+  const [customerId, setCustomerId] = useState<Provider []>([]); // Added state for customer ID
   const [loading, setLoading] = useState(true); // Initially set loading to true
 
-  // // Fetch authenticated customer ID
-  // useEffect(() => {
-  //   const fetchCustomerId = async () => {
-  //     try {
-  //       const response = await fetch("http://localhost:8080/customer/customers");
-  //       if (!response.ok) {
-  //         throw new Error('Failed to fetch customer ID');
-  //       }
-  //       const data = await response.json();
-  //       setCustomerId(data.id); // Assuming the response has the customer ID in `data.id`
-  //     } catch (error) {
-  //       console.error('Error fetching customer ID:', error);
-  //     }
-  //   };
+  // Fetch authenticated customer ID
+  useEffect(() => {
+    const fetchCustomerId = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/customer/customers");
+        if (!response.ok) {
+          throw new Error('Failed to fetch customer ID');
+        }
+        const data = await response.json();
+        setCustomerId(data.id); // Assuming the response has the customer ID in `data.id`
+      } catch (error) {
+        console.error('Error fetching customer ID:', error);
+      }
+    };
 
-  //   fetchCustomerId();
-  // }, []);
+    fetchCustomerId();
+  }, []);
 
 
   useEffect(() => {
@@ -138,7 +142,7 @@ const Dashboard: React.FC = () => {
   
       if (description) {
         const requestData = {
-          customer_id: customerId,
+          customer_id: provider.id,
           provider_id: provider.id, // Assuming provider ID is stored in _id field
           request_details: description,
           // status: 'pending',
